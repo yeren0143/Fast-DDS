@@ -410,6 +410,14 @@ RTPSParticipantImpl::RTPSParticipantImpl(
         logInfo(RTPS_PARTICIPANT,
                 "RTPSParticipant \"" << m_att.getName() << "\" with guidPrefix: " << m_guid.guidPrefix);
     }
+
+    // Start builtin protocols
+    if (!mp_builtinProtocols->initBuiltinProtocols(this, m_att.builtin))
+    {
+        logError(RTPS_PARTICIPANT, "The builtin protocols were not correctly initialized");
+    }
+
+    logInfo(RTPS_PARTICIPANT, "RTPSParticipant \"" << m_att.getName() << "\" with guidPrefix: " << m_guid.guidPrefix);
 }
 
 RTPSParticipantImpl::RTPSParticipantImpl(
@@ -425,11 +433,7 @@ RTPSParticipantImpl::RTPSParticipantImpl(
 
 void RTPSParticipantImpl::enable()
 {
-    // Start builtin protocols
-    if (!mp_builtinProtocols->initBuiltinProtocols(this, m_att.builtin))
-    {
-        logError(RTPS_PARTICIPANT, "The builtin protocols were not correctly initialized");
-    }
+    mp_builtinProtocols->enable();
 
     //Start reception
     for (auto& receiver : m_receiverResourcelist)
