@@ -376,6 +376,13 @@ void PDP::initializeParticipantProxyData(
             participant_data->m_properties.push_back(physical_property_name, *physical_property);
         }
     }
+    for (auto& property : mp_RTPSParticipant->getAttributes().properties.properties())
+    {
+        if (property.propagate())
+        {
+            participant_data->m_properties.push_back(property.name(), property.value());
+        }
+    }
 }
 
 bool PDP::initPDP(
