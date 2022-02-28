@@ -1214,29 +1214,10 @@ void RTPSParticipantImpl::update_attributes(
         for (auto existing_server : m_att.builtin.discovery_config.m_DiscoveryServers)
         {
             bool contained = false;
-            bool locator_contained = false;
             for (auto incoming_server : patt.builtin.discovery_config.m_DiscoveryServers)
             {
                 if (existing_server.guidPrefix == incoming_server.guidPrefix)
                 {
-                    for (auto incoming_locator : incoming_server.metatrafficUnicastLocatorList)
-                    {
-                        for (auto existing_locator : existing_server.metatrafficUnicastLocatorList)
-                        {
-                            if (incoming_locator == existing_locator)
-                            {
-                                locator_contained = true;
-                                break;
-                            }
-                        }
-                        if (!locator_contained)
-                        {
-                            logWarning(RTPS_QOS_CHECK,
-                                    "Discovery Servers cannot add/modify their locators: " << incoming_locator <<
-                                    " has not been added")
-                            return;
-                        }
-                    }
                     contained = true;
                     break;
                 }
