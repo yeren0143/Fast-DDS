@@ -15,6 +15,7 @@
 #ifndef _FASTDDS_TEST_UDPV4_TRANSPORT_H_
 #define _FASTDDS_TEST_UDPV4_TRANSPORT_H_
 
+#include <atomic>
 #include <vector>
 
 #include <fastdds/rtps/common/SequenceNumber.h>
@@ -57,8 +58,8 @@ public:
     // Handle to a persistent log of dropped packets. Defaults to length 0 (no logging) to prevent wasted resources.
     RTPS_DllAPI static std::vector<std::vector<fastrtps::rtps::octet>> test_UDPv4Transport_DropLog;
     RTPS_DllAPI static uint32_t test_UDPv4Transport_DropLogLength;
-    RTPS_DllAPI static bool always_drop_participant_builtin_topic_data;
-    RTPS_DllAPI static bool simulate_no_interfaces;
+    RTPS_DllAPI static std::atomic_bool always_drop_participant_builtin_topic_data;
+    RTPS_DllAPI static std::atomic_bool simulate_no_interfaces;
 
 protected:
 

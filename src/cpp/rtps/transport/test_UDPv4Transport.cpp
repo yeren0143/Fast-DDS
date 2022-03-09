@@ -35,8 +35,8 @@ using EntityId_t = fastrtps::rtps::EntityId_t;
 std::vector<std::vector<octet>> test_UDPv4Transport::test_UDPv4Transport_DropLog;
 uint32_t test_UDPv4Transport::test_UDPv4Transport_DropLogLength = 0;
 bool test_UDPv4Transport::test_UDPv4Transport_ShutdownAllNetwork = false;
-bool test_UDPv4Transport::always_drop_participant_builtin_topic_data = false;
-bool test_UDPv4Transport::simulate_no_interfaces = false;
+atomic_bool test_UDPv4Transport::always_drop_participant_builtin_topic_data = {false};
+atomic_bool test_UDPv4Transport::simulate_no_interfaces = {false};
 
 test_UDPv4Transport::test_UDPv4Transport(
         const test_UDPv4TransportDescriptor& descriptor)
