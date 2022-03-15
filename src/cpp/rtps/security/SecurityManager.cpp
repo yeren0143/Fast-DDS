@@ -347,10 +347,14 @@ bool SecurityManager::init(
                     {
                         assert(!local_participant_crypto_handle_->nil());
                     }
+                    else
+                    {
+                        log_info_message(exception.what());
+                    }
                 }
                 else
                 {
-                    log_info_message("Cryptography plugin not configured");
+                    log_info_message("Cryptography plugin not configured. Security will be disabled");
                 }
             }
 
