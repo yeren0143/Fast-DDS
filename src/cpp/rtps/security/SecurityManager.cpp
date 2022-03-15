@@ -214,6 +214,20 @@ bool SecurityManager::init(
         }
     }
 
+    const auto log_info_message = [this](const char* msg)
+            {
+                if (logging_plugin_)
+                {
+                    SecurityException logging_exception;
+                    logging_plugin_->log(LoggingLevel::INFORMATIONAL_LEVEL, msg, "SecurityManager,init",
+                            logging_exception);
+                }
+                else
+                {
+                    logInfo(SECURITY, msg);
+                }
+            };
+
     authentication_plugin_ = factory_.create_authentication_plugin(participant_properties);
 
     if (authentication_plugin_ != nullptr)
@@ -342,18 +356,7 @@ bool SecurityManager::init(
                 }
                 else
                 {
-                    if (logging_plugin_)
-                    {
-                        SecurityException logging_exception;
-                        logging_plugin_->log(LoggingLevel::INFORMATIONAL_LEVEL,
-                                "Cryptography plugin not configured",
-                                "SecurityManager,init",
-                                logging_exception);
-                    }
-                    else
-                    {
-                        logInfo(SECURITY, "Cryptography plugin not configured.");
-                    }
+                    log_info_message("Cryptography plugin not configured");
                 }
             }
 
@@ -376,18 +379,7 @@ bool SecurityManager::init(
     }
     else
     {
-        if (logging_plugin_)
-        {
-            SecurityException logging_exception;
-            logging_plugin_->log(LoggingLevel::INFORMATIONAL_LEVEL,
-                    "Authentication plugin not configured. Security will be disable",
-                    "SecurityManager,init",
-                    logging_exception);
-        }
-        else
-        {
-            logInfo(SECURITY, "Authentication plugin not configured. Security will be disable");
-        }
+        log_info_message("Authentication plugin not configured. Security will be disabled");
     }
 
     return true;
