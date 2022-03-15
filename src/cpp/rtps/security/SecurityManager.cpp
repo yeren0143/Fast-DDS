@@ -318,23 +318,17 @@ bool SecurityManager::init(
                         local_permissions_handle_ = nullptr;
                     }
                 }
-            }
-
-            if (access_plugin_ == nullptr)
-            {
-                // Read participant properties.
-                const std::string* property_value = PropertyPolicyHelper::find_property(participant_properties,
-                                "rtps.participant.rtps_protection_kind");
-                if (property_value != nullptr && property_value->compare("ENCRYPT") == 0)
+                else
                 {
-                    attributes.is_rtps_protected = true;
-                    attributes.plugin_participant_attributes |=
-                            PLUGIN_PARTICIPANT_SECURITY_ATTRIBUTES_FLAG_IS_VALID |
-                            PLUGIN_PARTICIPANT_SECURITY_ATTRIBUTES_FLAG_IS_RTPS_ENCRYPTED;
+                    log_info_message(exception.what());
                 }
             }
+            else
+            {
+                log_info_message("Access control plugin not configured. Security will be disabled");
+            }
 
-            if (access_plugin_ == nullptr || local_permissions_handle_ != nullptr)
+            if (access_plugin_ != nullptr && local_permissions_handle_ != nullptr)
             {
                 crypto_plugin_ = factory_.create_cryptography_plugin(participant_properties);
 
