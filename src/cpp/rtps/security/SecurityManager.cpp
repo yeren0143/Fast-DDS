@@ -325,7 +325,7 @@ bool SecurityManager::init(
             }
             else
             {
-                log_info_message("Access control plugin not configured. Security will be disabled");
+                log_info_message("Access control plugin not configured");
             }
 
             if (access_plugin_ != nullptr && local_permissions_handle_ != nullptr)
@@ -354,12 +354,12 @@ bool SecurityManager::init(
                 }
                 else
                 {
-                    log_info_message("Cryptography plugin not configured. Security will be disabled");
+                    log_info_message("Cryptography plugin not configured");
                 }
             }
 
-            if ((access_plugin_ == nullptr || local_permissions_handle_ != nullptr) &&
-                    (crypto_plugin_ == nullptr || local_participant_crypto_handle_ != nullptr))
+            if (nullptr != access_plugin_ && nullptr != local_permissions_handle_ &&
+                    nullptr != crypto_plugin_ && nullptr != local_participant_crypto_handle_)
             {
                 // Should be activated here, to enable encription buffer on created entities
                 security_activated = true;
