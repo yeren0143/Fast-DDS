@@ -328,7 +328,7 @@ bool SecurityManager::init(
                 log_info_message("Access control plugin not configured");
             }
 
-            if (access_plugin_ != nullptr && local_permissions_handle_ != nullptr)
+            if (access_plugin_ == nullptr || local_permissions_handle_ != nullptr)
             {
                 crypto_plugin_ = factory_.create_cryptography_plugin(participant_properties);
 
@@ -358,8 +358,8 @@ bool SecurityManager::init(
                 }
             }
 
-            if (nullptr != access_plugin_ && nullptr != local_permissions_handle_ &&
-                    nullptr != crypto_plugin_ && nullptr != local_participant_crypto_handle_)
+            if ((access_plugin_ == nullptr || local_permissions_handle_ != nullptr) &&
+                    (crypto_plugin_ == nullptr || local_participant_crypto_handle_ != nullptr))
             {
                 // Should be activated here, to enable encription buffer on created entities
                 security_activated = true;
