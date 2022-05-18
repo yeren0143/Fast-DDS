@@ -43,7 +43,9 @@ bool HelloWorldPublisher::init()
 {
     hello_.index(0);
     hello_.message("HelloWorld");
-    DomainParticipantQos pqos;
+    auto factory = DomainParticipantFactory::get_instance();
+    factory->load_profiles();
+    DomainParticipantQos pqos = factory->get_default_participant_qos();
     pqos.name("Participant_pub");
     participant_ = DomainParticipantFactory::get_instance()->create_participant(0, pqos);
 
