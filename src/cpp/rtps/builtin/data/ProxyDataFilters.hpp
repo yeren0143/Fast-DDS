@@ -136,6 +136,7 @@ private:
                     {
                         // Trying to add external locator exactly.
                         // Should be ignored, as it means we should take into account the internal network only.
+                        std::cout << "Ignoring locator " << temp_locator << std::endl;
                         return;
                     }
 
@@ -144,6 +145,7 @@ private:
                         // External locator matches. Should be used and internal locators be discarded.
                         target_locators_list->unicast.clear();
                         target_locators_list->add_unicast_locator(temp_locator);
+                        std::cout << "Added locator " << temp_locator << std::endl;
                         return;
                     }
                 }
@@ -152,6 +154,11 @@ private:
             if (target_locators_list->unicast.empty())
             {
                 target_locators_list->add_unicast_locator(temp_locator);
+                std::cout << "Added locator " << temp_locator << std::endl;
+            }
+            else
+            {
+                std::cout << "Target was not empty. Ignored locator " << temp_locator << std::endl;
             }
         }
     }
