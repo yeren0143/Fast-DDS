@@ -17,6 +17,7 @@
 
 #include <fastdds/rtps/common/RemoteLocators.hpp>
 #include <rtps/transport/shared_mem/SHMLocator.hpp>
+#include <utils/SystemInfo.hpp>
 
 namespace eprosima {
 namespace fastrtps {
@@ -113,7 +114,55 @@ private:
             RemoteLocatorList* target_locators_list,
             const Locator_t& temp_locator)
     {
-        target_locators_list->add_unicast_locator(temp_locator);
+        static ReturnCode_t env_loaded_ret = ReturnCode_t::RETCODE_ERROR;
+        static RemoteServerList_t external_locators;
+        if (ReturnCode_t::RETCODE_ERROR == env_loaded_ret)
+        {
+            std::string external_address;
+            env_loaded_ret = SystemInfo::get_env("FASTDDS_EXTERNAL_LOCATORS", external_address);
+            if (ReturnCode_t::RETCODE_OK == env_loaded_ret)
+            {
+                load_environment_server_info(external_address, external_locators);
+            }
+        }
+
+        if (LOCATOR_KIND_UDPv4 == temp_locator.kind)
+        {
+            for (const auto& server : external_locators)
+            {
+                for (const auto& loc : server.metatrafficUnicastLocatorList)
+                {
+                    if (loc == temp_locator)
+                    {
+                        // Trying to add external locator exactly.
+                        // Should be ignored, as it means we should take into account the internal network only.
+                        return;
+                    }
+
+                    if (locator_match(loc, temp_locator))
+                    {
+                        // External locator matches. Should be used and internal locators be discarded.
+                        target_locators_list->unicast.clear();
+                        target_locators_list->add_unicast_locator(temp_locator);
+                        return;
+                    }
+                }
+            }
+
+            target_locators_list->add_unicast_locator(temp_locator);
+        }
+    }
+
+    static bool locator_match(
+            const Locator_t& loc1,
+            const Locator_t& loc2)
+    {
+        return
+            (LOCATOR_KIND_UDPv4 == loc1.kind) &&
+            (LOCATOR_KIND_UDPv4 == loc2.kind) &&
+            (loc1.address[12] == loc2.address[12]) &&
+            (loc1.address[13] == loc2.address[13]) &&
+            (loc1.address[14] == loc2.address[14]);
     }
 
 };
