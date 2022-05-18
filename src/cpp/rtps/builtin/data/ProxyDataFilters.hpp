@@ -84,7 +84,7 @@ public:
             {
                 if (is_unicast)
                 {
-                    target_locators_list->add_unicast_locator(temp_locator);
+                    filter_unicast_locator(target_locators_list, temp_locator);
                 }
                 else
                 {
