@@ -149,7 +149,10 @@ private:
                 }
             }
 
-            target_locators_list->add_unicast_locator(temp_locator);
+            if (target_locators_list->unicast.empty())
+            {
+                target_locators_list->add_unicast_locator(temp_locator);
+            }
         }
     }
 
