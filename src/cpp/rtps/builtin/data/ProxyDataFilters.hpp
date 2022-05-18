@@ -72,7 +72,7 @@ public:
 
                 if (is_unicast)
                 {
-                    target_locators_list->add_unicast_locator(temp_locator);
+                    filter_unicast_locator(target_locators_list, temp_locator);
                 }
                 else
                 {
@@ -97,7 +97,7 @@ public:
             {
                 if (is_unicast)
                 {
-                    target_locators_list->add_unicast_locator(temp_locator);
+                    filter_unicast_locator(target_locators_list, temp_locator);
                 }
                 else
                 {
@@ -105,6 +105,15 @@ public:
                 }
             }
         }
+    }
+
+private:
+
+    static void filter_unicast_locator(
+            RemoteLocatorList* target_locators_list,
+            const Locator_t& temp_locator)
+    {
+        target_locators_list->add_unicast_locator(temp_locator);
     }
 
 };
