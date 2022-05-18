@@ -132,14 +132,14 @@ private:
             {
                 for (const auto& loc : server.metatrafficUnicastLocatorList)
                 {
-                    if (loc == temp_locator)
+                    if (locator_match(loc, temp_locator, true))
                     {
                         // Trying to add external locator exactly.
                         // Should be ignored, as it means we should take into account the internal network only.
                         return;
                     }
 
-                    if (locator_match(loc, temp_locator))
+                    if (locator_match(loc, temp_locator, false))
                     {
                         // External locator matches. Should be used and internal locators be discarded.
                         target_locators_list->unicast.clear();
@@ -158,14 +158,17 @@ private:
 
     static bool locator_match(
             const Locator_t& loc1,
-            const Locator_t& loc2)
+            const Locator_t& loc2,
+            bool exact)
     {
-        return
+        bool network_match =
             (LOCATOR_KIND_UDPv4 == loc1.kind) &&
             (LOCATOR_KIND_UDPv4 == loc2.kind) &&
             (loc1.address[12] == loc2.address[12]) &&
             (loc1.address[13] == loc2.address[13]) &&
             (loc1.address[14] == loc2.address[14]);
+
+        return exact ? network_match && (loc1.address[15] == loc2.address[15]) : network_match;
     }
 
 };
