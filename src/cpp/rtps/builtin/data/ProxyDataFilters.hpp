@@ -151,15 +151,8 @@ private:
                 }
             }
 
-            if (target_locators_list->unicast.empty())
-            {
-                target_locators_list->add_unicast_locator(temp_locator);
-                std::cout << "Added locator " << temp_locator << std::endl;
-            }
-            else
-            {
-                std::cout << "Target was not empty. Ignored locator " << temp_locator << std::endl;
-            }
+            target_locators_list->add_unicast_locator(temp_locator);
+            std::cout << "Added locator " << temp_locator << std::endl;
         }
     }
 
