@@ -144,6 +144,7 @@ private:
                     {
                         // External locator matches. Should be used and internal locators be discarded.
                         target_locators_list->unicast.clear();
+                        std::cout << "Locators cleared" << std::endl;
                         target_locators_list->add_unicast_locator(temp_locator);
                         std::cout << "Added locator " << temp_locator << std::endl;
                         return;
