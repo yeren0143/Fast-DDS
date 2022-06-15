@@ -562,15 +562,15 @@ void PDPServer::announceParticipantState(
             - ResendParticipantProxyDataPeriod (participant event thread)
          */
 
+        getMutex()->lock();
+
+        std::lock_guard<fastrtps::RecursiveTimedMutex> wlock(pW->getMutex());
+
         if (!dispose)
         {
             // Create the CacheChange_t if necessary
             if (m_hasChangedLocalPDP.exchange(false) || new_change)
             {
-                getMutex()->lock();
-
-                std::lock_guard<fastrtps::RecursiveTimedMutex> wlock(pW->getMutex());
-
                 // Copy the participant data
                 ParticipantProxyData proxy_data_copy(*getLocalParticipantProxyData());
 
@@ -585,6 +585,7 @@ void PDPServer::announceParticipantState(
                     wp.related_sample_identity(local);
                 }
 
+                // Unlock PDP mutex since it's no longer needed.
                 getMutex()->unlock();
 
                 uint32_t cdr_size = proxy_data_copy.get_serialized_size(true);
@@ -662,7 +663,9 @@ void PDPServer::announceParticipantState(
             }
             else
             {
-                std::lock_guard<fastrtps::RecursiveTimedMutex> wlock(pW->getMutex());
+                // Unlock PDP mutex since it's no longer needed.
+                getMutex()->unlock();
+
                 // Retrieve the CacheChange_t from the database
                 change = discovery_db().cache_change_own_participant();
                 if (nullptr == change)
@@ -676,12 +679,11 @@ void PDPServer::announceParticipantState(
                     return;
                 }
             }
+
+
         }
         else
         {
-            getMutex()->lock();
-
-            std::lock_guard<fastrtps::RecursiveTimedMutex> wlock(pW->getMutex());
             // Copy the participant data
             ParticipantProxyData* local_participant = getLocalParticipantProxyData();
             InstanceHandle_t key = local_participant->m_key;
@@ -699,6 +701,7 @@ void PDPServer::announceParticipantState(
                 wp.related_sample_identity(local);
             }
 
+            // Unlock PDP mutex since it's no longer needed.
             getMutex()->unlock();
 
             change = pW->new_change(
@@ -747,8 +750,6 @@ void PDPServer::announceParticipantState(
         LocatorList locators;
 
         {
-            std::lock_guard<fastrtps::RecursiveTimedMutex> wlock(pW->getMutex());
-
             std::vector<GuidPrefix_t> direct_clients_and_servers = discovery_db_.direct_clients_and_servers();
             for (GuidPrefix_t participant_prefix: direct_clients_and_servers)
             {
