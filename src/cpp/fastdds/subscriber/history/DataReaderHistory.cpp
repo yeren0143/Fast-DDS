@@ -680,16 +680,18 @@ bool DataReaderHistory::completed_change_keep_last(
     return false;
 }
 
-void DataReaderHistory::update_instance_nts(
+bool DataReaderHistory::update_instance_nts(
         CacheChange_t* const change)
 {
     InstanceCollection::iterator vit;
     vit = keyed_changes_.find(change->instanceHandle);
 
     assert(vit != keyed_changes_.end());
-    vit->second.update_state(change->kind, change->writerGUID);
+    bool ret = vit->second.update_state(change->kind, change->writerGUID);
     change->reader_info.disposed_generation_count = vit->second.disposed_generation_count;
     change->reader_info.no_writers_generation_count = vit->second.no_writers_generation_count;
+
+    return ret;
 }
 
 void DataReaderHistory::writer_not_alive(

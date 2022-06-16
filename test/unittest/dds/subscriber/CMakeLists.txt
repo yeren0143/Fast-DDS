@@ -84,6 +84,7 @@ target_compile_definitions(DataReaderHistoryTests PRIVATE FASTRTPS_NO_LIB
     )
 target_include_directories(DataReaderHistoryTests PRIVATE
     ${PROJECT_SOURCE_DIR}/test/mock/rtps/RTPSReader
+    ${PROJECT_SOURCE_DIR}/test/mock/rtps/StatelessReader
     ${PROJECT_SOURCE_DIR}/test/mock/dds/Topic
     ${PROJECT_SOURCE_DIR}/test/mock/dds/TypeSupport
     ${PROJECT_SOURCE_DIR}/include ${PROJECT_BINARY_DIR}/include
