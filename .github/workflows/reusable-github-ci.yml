@@ -55,6 +55,9 @@ jobs:
                throw "Unsupported platform??"
              }
 
+             # download the pull request branches on fetch
+             git config --global remote.origin.fetch '+refs/pull/*:refs/remotes/origin/pull/*'
+
              $env_variables | Out-File $Env:GITHUB_ENV -Append -Encoding OEM
 
       - name: Installing colcon ancillary
@@ -302,8 +305,8 @@ jobs:
                 -Headers @{"method"="GET";"Accept"="application/vnd.github.v3+json"}).content |
                 ConvertFrom-Json).content | ConvertFrom-CIBase64 | ConvertFrom-Yaml
 
-             # checkout the merged branch
-             $repos.repositories.fastrtps.version = "${{ github.ref }}"
+             # checkout the commit
+             $repos.repositories.fastrtps.version = "${{ github.ref }}" -replace "^refs/pull","origin/pull"
              $repos | ConvertTo-Yaml | Tee-Object -FilePath fastrtps.repos
 
              # create source dir and donwload the sources
