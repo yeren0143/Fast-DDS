@@ -1068,6 +1068,14 @@ public:
         return *this;
     }
 
+    PubSubWriter& ownership_strength(
+            uint32_t strength)
+    {
+        publisher_attr_.qos.m_ownership.kind = eprosima::fastdds::dds::EXCLUSIVE_OWNERSHIP_QOS;
+        publisher_attr_.qos.m_ownershipStrength.value = strength;
+        return *this;
+    }
+
     PubSubWriter& load_publisher_attr(
             const std::string& xml)
     {
@@ -1141,6 +1149,11 @@ public:
     {
         publisher_attr_.qos.m_partition.clear();
         publisher_attr_.qos.m_partition.push_back(partition.c_str());
+        return publisher_->updateAttributes(publisher_attr_);
+    }
+
+    bool set_qos()
+    {
         return publisher_->updateAttributes(publisher_attr_);
     }
 
