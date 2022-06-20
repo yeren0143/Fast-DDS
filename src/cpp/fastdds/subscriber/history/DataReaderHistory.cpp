@@ -704,6 +704,16 @@ void DataReaderHistory::writer_not_alive(
     }
 }
 
+void DataReaderHistory::writer_update_its_ownership_strength_nts(
+        const GUID_t& writer_guid,
+        const uint32_t ownership_strength)
+{
+    for (auto& instance : keyed_changes_)
+    {
+        instance.second.writer_update_its_ownership_strength(writer_guid, ownership_strength);
+    }
+}
+
 } // namespace detail
 } // namsepace dds
 } // namespace fastdds

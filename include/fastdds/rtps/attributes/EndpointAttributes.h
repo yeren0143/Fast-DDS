@@ -69,12 +69,16 @@ public:
     //!Properties
     PropertyPolicy properties;
 
+    //!Ownership
+    OwnershipQosPolicyKind ownershipKind;
+
     EndpointAttributes()
         : endpointKind(WRITER)
         , topicKind(NO_KEY)
         , reliabilityKind(BEST_EFFORT)
         , durabilityKind(VOLATILE)
         , persistence_guid()
+        , ownershipKind(SHARED_OWNERSHIP_QOS)
         , m_userDefinedID(-1)
         , m_entityID(-1)
     {
